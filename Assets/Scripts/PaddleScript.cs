@@ -7,6 +7,8 @@ public class PaddleScript : MonoBehaviour {
     public float      paddleSpeed = .05f;
     public float      topWall, bottomWall;
 
+    public KeyCode upArrow, downArrow;
+
     // Start is called before the first frame update
     void Start() {
 
@@ -14,13 +16,13 @@ public class PaddleScript : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetKey(KeyCode.DownArrow)) {
+        if (Input.GetKey(downArrow)) { // KeyCode.A
             if (yPos > bottomWall) {
                 yPos -= paddleSpeed;
             }
         }
 
-        if (Input.GetKey(KeyCode.UpArrow)) {
+        if (Input.GetKey(upArrow)) {
             if (yPos < topWall) {
                 yPos += paddleSpeed;
             }
