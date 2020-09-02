@@ -10,6 +10,9 @@ public class BallScript : MonoBehaviour
     public float ballSpeed;
     public float maxSpeed = 10f;
     public float minSpeed = 1f;
+
+    public AudioSource scoreSound, blip;
+    
     
     private int[] dirOptions = {-1, 1};
     private int hDir, vDir;
@@ -45,14 +48,45 @@ public class BallScript : MonoBehaviour
     // if the ball goes out of bounds
     private void OnCollisionEnter2D(Collision2D other)
     {
+        // did we hit a wall?
+        if (other.gameObject.tag == "wall")
+        {
+            // make pitch higher?
+            blip.pitch = 0.75f;
+            blip.Play();
+            
+        }
+
+        // did we hit a paddle?
+        if (other.gameObject.tag == "paddle")
+        {
+            // make pitch higher?
+            blip.pitch = 1f;
+            blip.Play();
+        }
+
+
         // Prevent ball from going too fast
-        if (Mathf.Abs(rb.velocity.x) > maxSpeed) rb.velocity = new Vector2(maxSpeed, rb.velocity.y);
-        if (Mathf.Abs(rb.velocity.y) > maxSpeed) rb.velocity = new Vector2(rb.velocity.x, maxSpeed);
+        if (Mathf.Abs(rb.velocity.x) > maxSpeed) rb.velocity = new Vector2(rb.velocity.x * 0.9f, rb.velocity.y);
+        if (Mathf.Abs(rb.velocity.y) > maxSpeed) rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.9f);
+        
+        if (Mathf.Abs(rb.velocity.x) < minSpeed) rb.velocity = new Vector2(rb.velocity.x * 1.1f, rb.velocity.y);
+        if (Mathf.Abs(rb.velocity.y) < minSpeed) rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 1.1f);
+        
+        // // Too Sharp an angle
+        // if (Mathf.Abs(rb.velocity.x) < minSpeed)
+        // {
+        //     if(rb.velocity.x < 0) rb.velocity = new Vector2(minSpeed, rb.velocity.y);
+        //     else rb.velocity = new Vector2(minSpeed, rb.velocity.y);
+        // }
+        //
+        // if (rb.velocity.y) < minSpeed) rb.velocity = new Vector2(rb.velocity.x, minSpeed);
 
         // if wall
         if (other.gameObject.tag == "LeftBounds")
         {
             // Point for the right
+            scoreSound.Play();
             ScoreScript.S.UpdateScore(1);
             // Reset the Ball
             Reset();
@@ -60,10 +94,13 @@ public class BallScript : MonoBehaviour
         if (other.gameObject.tag == "RightBounds")
         {
             // Point for the left
+            scoreSound.Play();
             ScoreScript.S.UpdateScore(0);
             // Reset the Ball
             Reset();
         }
+        
+        Debug.Log(rb.velocity);
     }
 
 

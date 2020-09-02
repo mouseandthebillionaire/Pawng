@@ -6,6 +6,8 @@ TagManager:
   tags:
   - LeftBounds
   - RightBounds
+  - wall
+  - paddle
   layers:
   - Default
   - TransparentFX
